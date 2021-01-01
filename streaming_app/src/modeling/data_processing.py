@@ -1,6 +1,6 @@
 from tensorflow.keras.datasets import mnist
 from sklearn.model_selection import train_test_split
-from numpy import savez
+from numpy import unique, savez
 from os.path import join
 ########################################################################
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -18,6 +18,11 @@ x_train, x_validation, y_train, y_validation = train_test_split(
     x_train, y_train, test_size=0.15,
     # ensuring reproducible results
     random_state=42)
+########################################################################
+# ensuring all categories are present among the target variables
+unique(y_train)
+unique(y_test)
+unique(y_validation)
 ########################################################################
 # flatten images (1 image spread across n columns)
 cols = x_train.shape[1] * x_train.shape[2]
