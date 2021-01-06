@@ -3,3 +3,4 @@ spark_app/
 .vscode
 app/data/
 Data/
+Saved_model/
