@@ -22,11 +22,6 @@ test_df = pd.DataFrame(
     data=np.column_stack((modeling_dict['x_test'], modeling_dict['y_test']))
 )
 
-# validation_df = pd.DataFrame(
-
-# data=np.column_stack(
-# (modeling_dict['x_validation'], modeling_dict['y_validation']))
-# )
 ##############################################################################
 ##############################################################################
 # setup local Spark session (adapt to your hardware!)
@@ -47,13 +42,10 @@ spark = (SparkSession
 # Create Spark DataFrames from Pandas DataFrames
 train_df = spark.createDataFrame(train_df)
 test_df = spark.createDataFrame(test_df)
-# validation_df = spark.createDataFrame(validation_df)
 ##############################################################################
 # rename the target variable
 train_df = train_df.withColumnRenamed(train_df.columns[-1], 'label')
 test_df = test_df.withColumnRenamed(test_df.columns[-1], 'label')
-# validation_df = validation_df.withColumnRenamed(
-# validation_df.columns[-1], 'label')
 ##############################################################################
 # form a single vector out of all features
 assembler = VectorAssembler(
@@ -62,12 +54,10 @@ assembler = VectorAssembler(
 
 train_df = assembler.transform(train_df)
 test_df = assembler.transform(test_df)
-# validation_df = assembler.transform(validation_df)
 ##############################################################################
 # keeping only the needed columns
 train_df = train_df.select('features', 'label')
 test_df = test_df.select('features', 'label')
-# validation_df = validation_df.select('features', 'label')
 ##############################################################################
 # number of input features
 num_inputs = modeling_dict['x_train'].shape[1]
@@ -77,7 +67,7 @@ num_outputs = np.unique(modeling_dict['y_train']).shape[0]
 mlp = MultilayerPerceptronClassifier(
     featuresCol='features', labelCol='label',
     # batch size
-    blockSize=128,
+    blockSize=64,
     # 3 layers defined each with its count of neurons
     # => 1 input layer, 1 hidden layer, 1 output layer
     layers=[num_inputs, 100, num_outputs],
