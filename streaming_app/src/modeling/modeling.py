@@ -29,7 +29,7 @@ test_df = pd.DataFrame(
 # )
 ##############################################################################
 ##############################################################################
-# setup local Spark session
+# setup local Spark session (adapt to your hardware!)
 spark = (SparkSession
          .builder
          .appName("img_classifier")
@@ -37,6 +37,9 @@ spark = (SparkSession
          .config("spark.dynamicAllocation.enabled", "true")
          .config("spark.dynamicAllocation.minExecutors", "3")
          .config("spark.dynamicAllocation.maxExecutors", "5")
+         # to avoid an error related to lack of memory
+         .config("spark.driver.memory", "4g")
+         .config("spark.executor.memory", "4g")
          .getOrCreate()
          )
 ##############################################################################
