@@ -8,7 +8,7 @@ from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 ##############################################################################
 modeling_dict = np.load(
     # ensure interoperability across different OSs
-    join('app', 'data', 'modeling_data.npz')
+    join('Data', 'modeling_data.npz')
 )
 ##############################################################################
 # set np arrays as pd dataframes
