@@ -43,7 +43,7 @@ x_validation = x_validation / 255
 
 savez(
     # ensure interoperability across different OSs
-    join('app', 'data', 'modeling_data.npz'),
+    join('Data', 'modeling_data.npz'),
 
     x_train=x_train, y_train=y_train,
     x_test=x_test, y_test=y_test,
