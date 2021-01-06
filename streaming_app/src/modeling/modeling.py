@@ -22,11 +22,11 @@ test_df = pd.DataFrame(
     data=np.column_stack((modeling_dict['x_test'], modeling_dict['y_test']))
 )
 
-validation_df = pd.DataFrame(
+# validation_df = pd.DataFrame(
 
-    data=np.column_stack(
-        (modeling_dict['x_validation'], modeling_dict['y_validation']))
-)
+# data=np.column_stack(
+# (modeling_dict['x_validation'], modeling_dict['y_validation']))
+# )
 ##############################################################################
 ##############################################################################
 # setup local Spark session
@@ -44,53 +44,57 @@ spark = (SparkSession
 # Create Spark DataFrames from Pandas DataFrames
 train_df = spark.createDataFrame(train_df)
 test_df = spark.createDataFrame(test_df)
-validation_df = spark.createDataFrame(validation_df)
+# validation_df = spark.createDataFrame(validation_df)
 ##############################################################################
 # rename the target variable
 train_df = train_df.withColumnRenamed(train_df.columns[-1], 'label')
-test_df = train_df.withColumnRenamed(test_df.columns[-1], 'label')
-validation_df = train_df.withColumnRenamed(validation_df.columns[-1], 'label')
+test_df = test_df.withColumnRenamed(test_df.columns[-1], 'label')
+# validation_df = validation_df.withColumnRenamed(
+# validation_df.columns[-1], 'label')
 ##############################################################################
+# form a single vector out of all features
 assembler = VectorAssembler(
     inputCols=train_df.columns[:-1],
     outputCol="features")
 
 train_df = assembler.transform(train_df)
 test_df = assembler.transform(test_df)
-validation_df = assembler.transform(validation_df)
+# validation_df = assembler.transform(validation_df)
 ##############################################################################
 # keeping only the needed columns
 train_df = train_df.select('features', 'label')
 test_df = test_df.select('features', 'label')
-validation_df = validation_df.select('features', 'label')
+# validation_df = validation_df.select('features', 'label')
 ##############################################################################
+# number of input features
 num_inputs = modeling_dict['x_train'].shape[1]
-num_outputs = modeling_dict['y_train'].shape[0]
+# number of output categories
+num_outputs = np.unique(modeling_dict['y_train']).shape[0]
 
 mlp = MultilayerPerceptronClassifier(
     featuresCol='features', labelCol='label',
     # batch size
     blockSize=128,
+    # 3 layers defined each with its count of neurons
+    # => 1 input layer, 1 hidden layer, 1 output layer
     layers=[num_inputs, 100, num_outputs],
     # ensuring reproducible results
     seed=123)
 
-
 model = mlp.fit(train_df)
-
-# compute accuracy on the test set
+##############################################################################
 result = model.transform(test_df)
+# obtain the predictions and select the true values (test set)
 prediction_and_labels = result.select("prediction", "label")
-evaluator = MulticlassClassificationEvaluator(metricName="accuracy")
-print(
-    "Test set accuracy = {}".format(
-        evaluator.evaluate(prediction_and_labels)
-    )
-)
 
+evaluator = MulticlassClassificationEvaluator(metricName="accuracy")
+# compute the accuracy on the test set
+evaluator.evaluate(prediction_and_labels)
+##############################################################################
+# save the trained model
 mlp.save(
     # path where to save the trained model
-    join('app', 'Saved_model', 'mlp')
+    join('Saved_model', 'mlp')
 )
-
+##############################################################################
 spark.stop()
