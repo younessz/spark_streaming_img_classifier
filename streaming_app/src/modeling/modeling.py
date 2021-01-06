@@ -84,8 +84,8 @@ evaluator = MulticlassClassificationEvaluator(metricName="accuracy")
 # compute the accuracy on the test set
 evaluator.evaluate(prediction_and_labels)
 ##############################################################################
-# save the trained model
-mlp.save(
+# save the trained model (and allowing overwrites)
+mlp.write().overwrite().save(
     # path where to save the trained model
     join('Saved_model', 'mlp')
 )
