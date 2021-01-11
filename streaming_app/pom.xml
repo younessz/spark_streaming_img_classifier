@@ -7,6 +7,11 @@
     <groupId>org.img_classifier</groupId>
     <artifactId>streaming_app</artifactId>
     <version>1.0-SNAPSHOT</version>
+    
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-core_2.12</artifactId>
+    <version>3.0.1</version>
+
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
