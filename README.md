@@ -40,7 +40,7 @@ Download and install Python:
    python3 -m pip install -r requirements.txt
    ```
 
-# Data
+## Data
 
 MNIST handwritten digits dataset (cf. streaming_app/src/modeling/data_processing.py).
 
