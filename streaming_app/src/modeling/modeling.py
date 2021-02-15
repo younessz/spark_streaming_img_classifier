@@ -29,12 +29,17 @@ spark = (SparkSession
          .builder
          .appName("img_classifier")
          .config("spark.sql.execution.arrow.pyspark.enabled", "true")
-         .config("spark.dynamicAllocation.enabled", "true")
-         .config("spark.dynamicAllocation.minExecutors", "3")
-         .config("spark.dynamicAllocation.maxExecutors", "5")
+         # .config("spark.dynamicAllocation.enabled", "true")
+         .config("spark.dynamicAllocation.minExecutors", "2")
+         .config("spark.dynamicAllocation.maxExecutors", "2")
          # to avoid an error related to lack of memory
-         .config("spark.driver.memory", "4g")
-         .config("spark.executor.memory", "4g")
+         .config("spark.driver.memory", "2g")
+         .config("spark.executor.memory", "2g")
+         # avoid an error related to using Pandas dataframes with PySpark
+         .config("spark.driver.extraJavaOptions",
+                 "-Dio.netty.tryReflectionSetAccessible=true")
+         .config("spark.executor.extraJavaOptions",
+                 "-Dio.netty.tryReflectionSetAccessible=true")
          .getOrCreate()
          )
 ##############################################################################
