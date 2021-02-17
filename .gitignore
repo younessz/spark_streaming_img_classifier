@@ -6,4 +6,4 @@ Data/
 Saved_model/
 Data_flow.txt
 Images/
-StreamingApp/target
+target/
