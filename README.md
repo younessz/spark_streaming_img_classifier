@@ -42,7 +42,7 @@ Download and install Python:
 
 ## Data
 
-MNIST handwritten digits dataset (cf. streaming_app/src/modeling/data_processing.py).
+MNIST handwritten digits dataset (loaded from modeling/data_processing.py).
 
 
 ## Usage
