@@ -47,7 +47,36 @@ MNIST handwritten digits dataset (cf. streaming_app/src/modeling/data_processing
 
 ## Usage
 
-WIP - To be continued
+
+
+build the Spark Streaming app using Maven
+```sh
+ mvn clean package
+```
+
+
+cd to spark folder
+
+```sh
+$SPARK_HOME/bin/spark-submit \
+  --class StreamPipeline \
+  --master local \
+  ./target/StreamPipeline-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
+
+
+
+For Spark REPL testing:
+$SPARK_HOME/bin/spark-shell   --driver-memory 2G  --executor-memory 2G   --num-executors 2
+
+then to add multiline comments use:
+
+scale > :paste
+
+> multiline code
+
+ctrl  + D
 
 ## License
 
@@ -61,4 +90,4 @@ Youness Zarhloul - [LinkedIn](https://www.linkedin.com/in/youness-zarhloul/)
 
 ## Acknowledgements
 
-* Any contributor direct or indirect to the amazing tools used by the project.
+https://github.com/CrowdShakti/spark-scala-mvn-boilerplate (pom.xml configuration)
