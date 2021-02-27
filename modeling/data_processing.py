@@ -1,16 +1,40 @@
 from tensorflow.keras.datasets import mnist
 from sklearn.model_selection import train_test_split
-from numpy import unique, savez
+from numpy import unique, savez, prod
 from os.path import join
+from numpy import newaxis
+from tensorflow.image import grayscale_to_rgb
+from tensorflow import convert_to_tensor
 ########################################################################
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+# handwritten single digits between 0 and 9 (y target variables)
 ########################################################################
 x_train[:5]
 ########################################################################
 y_train[:5]
 ########################################################################
-# each image is 28X28 pixels - RGB color coded
+# each image is a 28X28 pixels - grayscale color coded
 x_train.shape
+########################################################################
+# set images as 3D arrays (i.e. add 1 explicit grayscale channel)
+x_train = x_train[..., newaxis]
+
+x_test = x_test[..., newaxis]
+########################################################################
+x_train = convert_to_tensor(x_train)
+
+x_test = convert_to_tensor(x_test)
+
+# convert images to RGB format
+x_train = grayscale_to_rgb(x_train)
+
+x_test = grayscale_to_rgb(x_test)
+
+# set th Tensor objects back as 3D arrays (with RGB channels)
+x_train = x_train.numpy()
+
+x_test = x_test.numpy()
 ########################################################################
 # split the train set into train and validation sets
 x_train, x_validation, y_train, y_validation = train_test_split(
@@ -25,7 +49,7 @@ unique(y_test)
 unique(y_validation)
 ########################################################################
 # flatten images (1 image spread across n columns)
-cols = x_train.shape[1] * x_train.shape[2]
+cols = prod(x_train.shape[1:])  # cols = axis 1 * axis 2 * axis 3
 
 x_train = x_train.reshape(-1, cols)
 
